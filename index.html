@@ -64,6 +64,7 @@
 
         let tracking = false;
         let positions = [];
+        let lastPosition = { x: null, y: null }; // Última posição registrada
 
         // Iniciar o rastreamento
         canvas.addEventListener('mousedown', (e) => {
@@ -86,10 +87,15 @@
         // Função para salvar a posição do mouse
         function savePosition(event) {
             const rect = canvas.getBoundingClientRect();
-            const x = Math.round(event.clientX - rect.left); // Arredonda para inteiro
-            const y = Math.round(event.clientY - rect.top);  // Arredonda para inteiro
-            positions.push({ x, y });
-            drawPoint(x, y);
+            const x = Math.round(event.clientX - rect.left);
+            const y = Math.round(event.clientY - rect.top);
+
+            // Verifica se a posição mudou
+            if (lastPosition.x !== x || lastPosition.y !== y) {
+                positions.push({ x, y });
+                drawPoint(x, y);
+                lastPosition = { x, y }; // Atualiza a última posição
+            }
         }
 
         // Função para desenhar ponto no canvas
@@ -121,6 +127,7 @@
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpa o canvas
             positions = []; // Reseta as coordenadas
+            lastPosition = { x: null, y: null }; // Reseta a última posição
             console.log('Canvas e coordenadas limpos.');
         }
 
